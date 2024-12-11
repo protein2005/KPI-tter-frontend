@@ -1,6 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/slices/auth';
@@ -8,9 +7,9 @@ import { fetchMe } from '../redux/slices/auth';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const { userData } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -29,11 +28,21 @@ const Header = () => {
   return (
     <header className="bg-light py-3 shadow-sm">
       <div className="container d-flex justify-content-between align-items-center">
-        <h1 className="h4 mb-0">KPI-tter</h1>
+        <Link to="/" className="d-flex align-items-center text-dark text-decoration-none">
+          <h1 className="h4 mb-0">KPI-tter</h1>
+        </Link>
         <div>
           {isLoggedIn ? (
             <>
-              <span className="me-3 fw-semibold">{userData?.username}</span>
+              <Link to="/create-post" title="Створити пост" className="btn btn-success btn-sm me-2">
+                Створити пост
+              </Link>
+              <Link
+                to={`/profile/${userData?.username}`}
+                title="Профіль"
+                className="btn btn-primary btn-sm me-2">
+                {userData?.username}
+              </Link>
               <button className="btn btn-secondary btn-sm" onClick={handleLogout}>
                 Вийти
               </button>
