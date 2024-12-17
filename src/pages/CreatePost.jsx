@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMe } from '../redux/slices/auth';
 import Header from '../components/Header';
+import { RiSendPlaneFill } from 'react-icons/ri';
+import Footer from '../components/Footer';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
@@ -48,30 +50,42 @@ const CreatePost = () => {
   return (
     <>
       <Header />
-      <div className="container mt-5 col-md-6">
-        <h2>Створити пост</h2>
-        <form onSubmit={handleSubmit}>
+      <div className="container mt-5 col-md-6 mb-5">
+        <h2 className="text-center mb-4">Створити пост</h2>
+        <form onSubmit={handleSubmit} className="shadow-sm card p-4 rounded">
           <div className="mb-3">
             <label htmlFor="content" className="form-label">
               Текст посту
             </label>
             <textarea
               id="content"
-              className="form-control"
-              rows="4"
+              className={`form-control ${content.length > 140 ? 'border-danger' : ''}`}
+              rows="6"
               maxLength="140"
               value={content}
               onChange={(e) => {
                 setContent(e.target.value);
                 setError('');
-              }}></textarea>
+              }}
+              placeholder="Поділіться своїми думками..."
+            />
+            <div className="d-flex justify-content-between mt-2">
+              <small className={`text-muted ${content.length > 140 ? 'text-danger' : ''}`}>
+                {140 - content.length} символів залишилось
+              </small>
+              {error && <small className="text-danger">{error}</small>}
+            </div>
           </div>
-          {error && <div className="alert alert-danger">{error}</div>}
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary d-flex align-items-center justify-content-center w-100"
+            disabled={content.length === 0 || content.length > 140}>
+            <RiSendPlaneFill size={18} className="me-2" />
             Опублікувати
           </button>
         </form>
       </div>
+      <Footer />
     </>
   );
 };

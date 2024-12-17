@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 import Header from '../components/Header';
 import { useParams } from 'react-router-dom';
 import Post from '../components/Post';
+import { RiUserFollowLine, RiMessage2Line, RiGroupLine, RiFileTextLine } from 'react-icons/ri';
+import { RiErrorWarningLine } from 'react-icons/ri';
 
 function Profile() {
   const [user, setUser] = React.useState(null);
@@ -38,29 +40,79 @@ function Profile() {
     getUserPosts(username);
   }, [username]);
 
+  console.log(user);
+
   return (
     <>
       <Header />
       <div className="container mt-5">
         {user ? (
-          <div className="mb-4 text-center">
-            <h3 className="fw-bold">
-              {user.full_name} <span className="text-muted">(@{user.username})</span>
-            </h3>
-            <p className="text-muted">Публікацій: {user.posts}</p>
-          </div>
-        ) : (
-          <p className="text-center text-muted">{`Користувача з ім'ям @${username} не знайдено.`}</p>
-        )}
-
-        {posts.length > 0 ? (
           <div className="row">
-            {posts.map((post) => (
-              <Post post={post} />
-            ))}
+            {/* Ліва секція профілю */}
+            <div className="col-md-4">
+              <div className="card text-center shadow-sm">
+                <div className="card-body">
+                  <div className="mb-3">
+                    <img
+                      src={
+                        user.avatar || 'https://api.dicebear.com/9.x/adventurer/svg?seed=Liliana'
+                      }
+                      alt="Аватар користувача"
+                      className="rounded-circle"
+                      style={{ width: '120px', height: '120px', objectFit: 'cover' }}
+                    />
+                    {user.full_name && <h5 className="mt-1">{user.full_name}</h5>}
+                    <p className="text-muted">@{user.username}</p>
+                  </div>
+                  <div className="mb-3">
+                    <p>
+                      <RiGroupLine size={18} className="me-1" />
+                      Підписники: <strong>1042</strong>
+                    </p>
+                    <p>
+                      <RiUserFollowLine size={18} className="me-1" />
+                      Підписки: <strong>101</strong>
+                    </p>
+                    <p>
+                      <RiFileTextLine size={18} className="me-1" />
+                      Пости: <strong>{user.posts}</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <button className="btn btn-primary btn-sm me-2">
+                      <RiUserFollowLine size={16} className="me-1" /> Підписатися
+                    </button>
+                    <button className="btn btn-outline-secondary btn-sm">
+                      <RiMessage2Line size={16} className="me-1" /> Написати
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Права секція постів */}
+            <div className="col-md-8">
+              <h4 className="mb-4">Пости</h4>
+              {posts.length > 0 ? (
+                <div className="row">
+                  {posts.map((post) => (
+                    <div className="col-md-4 mb-4" key={post.id}>
+                      <Post post={post} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted">Немає доступних постів.</p>
+              )}
+            </div>
           </div>
         ) : (
-          <p className="text-center text-muted">Немає доступних постів.</p>
+          <div className="text-center">
+            <RiErrorWarningLine size={120} color="#aaa" />
+            <h4 className="text-center text-muted mt-3">
+              {`Користувача з ім'ям @${username} не знайдено.`}
+            </h4>
+          </div>
         )}
       </div>
     </>
